@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minha Biblioteca de Jogos Educacionais</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <div class="eyebrow">BIBLIOTECA PESSOAL</div>
+      <h1>Jogos Educacionais</h1>
+      <p>Organize e acesse seus jogos HTML por componente curricular.</p>
+    </div>
+    <div class="header-actions">
+      <button id="btnLogin" class="secondary">Entrar</button>
+      <button id="btnLogout" class="secondary hidden">Sair</button>
+      <span id="userEmail" class="user-email"></span>
+    </div>
+  </header>
+
+  <main class="container">
+    <section id="loginNotice" class="panel">
+      <h2>Acesso restrito</h2>
+      <p>Esta biblioteca foi configurada para uso pessoal. Entre com a conta autorizada no Firebase Authentication.</p>
+      <button id="btnLogin2" class="primary">Entrar com Google</button>
+    </section>
+
+    <section id="app" class="hidden">
+      <div class="section-head">
+        <div>
+          <h2>Componentes curriculares</h2>
+          <p>Escolha uma capa para abrir os jogos daquele componente.</p>
+        </div>
+        <button id="btnAddComponent" class="primary">+ Adicionar componente</button>
+      </div>
+      <div id="componentGrid" class="component-grid"></div>
+    </section>
+  </main>
+
+  <div id="componentModal" class="modal hidden">
+    <div class="modal-card">
+      <button class="close" data-close="componentModal">×</button>
+      <h2>Novo componente curricular</h2>
+      <label>Nome
+        <input id="componentName" placeholder="Ex.: Língua Portuguesa">
+      </label>
+      <label>Imagem da capa (URL, opcional)
+        <input id="componentCover" placeholder="https://...">
+      </label>
+      <button id="saveComponent" class="primary">Salvar</button>
+    </div>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
