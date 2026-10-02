@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 <title>CLASSROOM GAMIFICATION</title>
 <style>
   :root {
@@ -16,15 +16,19 @@
     --orange-icon: #f45d22;
   }
   
+  * {
+    box-sizing: border-box;
+  }
+
   body {
     margin: 0;
     font-family: 'Trebuchet MS', 'Segoe UI', Verdana, sans-serif;
-    /* IMAGEM ADICIONADA AO PLANO DE FUNDO GERAL */
+    /* PLANO DE FUNDO GERAL COMPATÍVEL COM TODOS OS DISPOSITIVOS */
     background: url('image_483032.jpg') no-repeat center center fixed;
     background-size: cover;
     color: var(--text-color);
     min-height: 100vh;
-    padding: 20px;
+    padding: 15px;
   }
 
   header {
@@ -36,30 +40,36 @@
     margin-bottom: 20px;
     background: rgba(13, 36, 68, 0.85);
     border-radius: 8px;
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(6px);
   }
 
   h1 {
     color: var(--gold);
     text-shadow: 2px 2px 0 #000;
     margin: 0;
+    font-size: 22px;
   }
 
   .btn-lixeira {
     background: var(--red);
     color: white;
     border: 2px solid #fff;
-    padding: 10px 20px;
+    padding: 8px 16px;
     border-radius: 8px;
     font-weight: bold;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 14px;
+    transition: background 0.2s;
   }
 
-  /* CAPA DO APP (HERO BANNER - SEGUNDO QUADRANTE) */
+  .btn-lixeira:hover {
+    background: #c12a36;
+  }
+
+  /* CAPA DO APP (HERO BANNER) */
   .app-cover {
     width: 100%;
-    height: 220px;
+    height: 180px;
     background: url('image_483032.jpg') no-repeat center center;
     background-size: cover;
     border-radius: 12px;
@@ -68,7 +78,6 @@
     position: relative;
     overflow: hidden;
     box-shadow: 0 6px 15px rgba(0,0,0,0.5);
-    box-sizing: border-box;
   }
 
   .cover-overlay {
@@ -79,13 +88,12 @@
     flex-direction: column;
     justify-content: flex-end;
     padding: 20px;
-    box-sizing: border-box;
   }
 
   .cover-overlay h2 {
     color: var(--gold);
     margin: 0;
-    font-size: 28px;
+    font-size: 24px;
     text-shadow: 2px 2px 4px #000;
     letter-spacing: 1px;
   }
@@ -93,13 +101,13 @@
   .cover-overlay p {
     color: #fff;
     margin: 5px 0 0 0;
-    font-size: 15px;
+    font-size: 14px;
     text-shadow: 1px 1px 3px #000;
   }
 
-  /* ESTILOS DA TELA PRINCIPAL (ÍCONES) */
+  /* ESTILOS DA TELA PRINCIPAL (ÁREAS E ÍCONES) */
   .area-section {
-    margin-bottom: 40px;
+    margin-bottom: 30px;
     background: rgba(10, 20, 40, 0.75);
     border-radius: 12px;
     padding: 20px;
@@ -112,21 +120,21 @@
     border-left: 5px solid var(--gold);
     padding-left: 10px;
     margin-top: 0;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
     font-size: 18px;
   }
 
   .grid-icones {
     display: flex;
     flex-wrap: wrap;
-    gap: 30px;
+    gap: 20px;
   }
 
   .icone-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 110px;
+    width: 100px;
     text-align: center;
     cursor: pointer;
     transition: transform 0.2s;
@@ -137,43 +145,44 @@
   }
 
   .circulo-icone {
-    width: 80px;
-    height: 80px;
+    width: 75px;
+    height: 75px;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 40px;
+    font-size: 36px;
     color: white;
     box-shadow: 0 4px 8px rgba(0,0,0,0.4);
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     border: 3px solid rgba(255,255,255,0.2);
   }
 
   .icone-titulo {
-    font-size: 13px;
+    font-size: 12px;
     font-weight: bold;
     color: #fff;
     text-transform: uppercase;
   }
 
-  /* ESTILOS DA PÁGINA DA DISCIPLINA (INTERNA) */
+  /* TELA INTERNA DA DISCIPLINA */
   #tela-disciplina {
     display: none;
     background: rgba(10, 20, 40, 0.85);
     border: 2px solid var(--gold);
     border-radius: 12px;
-    padding: 30px;
+    padding: 25px;
     backdrop-filter: blur(6px);
   }
 
   .cabecalho-disciplina {
     display: flex;
     align-items: center;
-    gap: 20px;
-    margin-bottom: 30px;
+    gap: 15px;
+    margin-bottom: 25px;
     border-bottom: 1px solid var(--blue);
-    padding-bottom: 20px;
+    padding-bottom: 15px;
+    flex-wrap: wrap;
   }
 
   .btn-voltar {
@@ -189,11 +198,12 @@
   .acoes-disciplina {
     display: flex;
     gap: 15px;
-    margin-bottom: 30px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
   }
 
   .btn {
-    padding: 12px 20px;
+    padding: 10px 18px;
     border: none;
     border-radius: 6px;
     font-weight: bold;
@@ -216,10 +226,9 @@
     border: 1px solid var(--blue);
   }
 
-  /* GRID DE JOGOS COM CAPAS */
   .grid-jogos {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     gap: 20px;
   }
 
@@ -240,14 +249,14 @@
 
   .capa-jogo {
     width: 100%;
-    height: 120px;
+    height: 110px;
     background-color: #000;
     background-size: cover;
     background-position: center;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 40px;
+    font-size: 36px;
   }
 
   .info-jogo {
@@ -257,13 +266,9 @@
   .info-jogo a {
     color: var(--gold);
     text-decoration: none;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: bold;
     display: block;
-  }
-
-  .info-jogo a:hover {
-    text-decoration: underline;
   }
 
   .checkbox-deletar {
@@ -273,18 +278,18 @@
     transform: scale(1.5);
     cursor: pointer;
     z-index: 10;
-    box-shadow: 0 0 5px rgba(0,0,0,0.8);
   }
 
-  /* MODAIS (LIXEIRA E ADICIONAR JOGO) */
+  /* MODAIS */
   .modal-overlay {
     display: none;
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.8);
+    background: rgba(0,0,0,0.85);
     z-index: 100;
     justify-content: center;
     align-items: center;
+    padding: 15px;
   }
 
   .modal-content {
@@ -292,9 +297,9 @@
     border: 3px solid var(--blue);
     border-radius: 12px;
     padding: 20px;
-    width: 90%;
-    max-width: 600px;
-    max-height: 80vh;
+    width: 100%;
+    max-width: 550px;
+    max-height: 85vh;
     overflow-y: auto;
   }
 
@@ -320,14 +325,13 @@
     border: 1px solid var(--blue);
     background: rgba(255,255,255,0.9);
     color: #000;
-    box-sizing: border-box;
   }
 
-  .form-group input[type="file"] {
-    background: transparent;
-    color: white;
-    border: none;
-    padding: 5px 0;
+  @media (max-width: 600px) {
+    header h1 { font-size: 18px; }
+    .grid-icones { justify-content: center; }
+    .app-cover { height: 150px; }
+    .cover-overlay h2 { font-size: 20px; }
   }
 </style>
 </head>
@@ -335,19 +339,17 @@
 
 <header>
   <h1>CLASSROOM GAMIFICATION</h1>
-  <div style="display: flex; gap: 15px; align-items: center;">
-    <button class="btn-lixeira" onclick="abrirLixeira()">LIXEIRA (🗑)</button>
-  </div>
+  <button class="btn-lixeira" onclick="abrirLixeira()">LIXEIRA (🗑)</button>
 </header>
 
-<!-- TELA 1: LISTAGEM DE ÁREAS E ÍCONES -->
+<!-- TELA PRINCIPAL -->
 <main id="tela-principal"></main>
 
-<!-- TELA 2: PÁGINA INTERNA DA DISCIPLINA -->
+<!-- TELA INTERNA DA DISCIPLINA -->
 <main id="tela-disciplina">
   <div class="cabecalho-disciplina">
     <button class="btn-voltar" onclick="voltarTelaPrincipal()">⬅ VOLTAR</button>
-    <div id="icone-disciplina-atual" class="circulo-icone" style="width: 60px; height: 60px; font-size: 30px;"></div>
+    <div id="icone-disciplina-atual" class="circulo-icone" style="width: 50px; height: 50px; font-size: 26px;"></div>
     <h2 id="titulo-disciplina-atual" style="color: var(--gold); margin: 0;"></h2>
   </div>
 
@@ -379,25 +381,24 @@
       <div class="form-group">
         <label for="tipoJogo">TIPO DO JOGO:</label>
         <select id="tipoJogo" onchange="alternarTipoEntradaJogo()" required>
-          <option value="html_local">Arquivo HTML (Off-line)</option>
-          <option value="link_web">Link da Web</option>
+          <option value="link_web">Link da Web (URL)</option>
+          <option value="html_local">Arquivo Local (.html)</option>
         </select>
       </div>
 
-      <div class="form-group" id="grupoArquivoHtml">
-        <label for="arquivoHtmlJogo">SELECIONE O ARQUIVO DO JOGO (.html, .zip):</label>
-        <input type="file" id="arquivoHtmlJogo" accept=".html,.htm,.zip">
-      </div>
-
-      <div class="form-group" id="grupoLinkWeb" style="display: none;">
+      <div class="form-group" id="grupoLinkWeb">
         <label for="linkJogo">LINK / URL DO JOGO:</label>
         <input type="url" id="linkJogo" placeholder="https://...">
       </div>
 
+      <div class="form-group" id="grupoArquivoHtml" style="display: none;">
+        <label for="arquivoHtmlJogo">NOME DO ARQUIVO LOCAL (Ex: jogo1.html):</label>
+        <input type="text" id="arquivoHtmlJogo" placeholder="nome_do_jogo.html">
+      </div>
+
       <div class="form-group">
-        <label for="capaJogo">IMAGEM DE CAPA DO JOGO (.jpg, .png) - Opcional:</label>
-        <input type="file" id="capaJogo" accept="image/*">
-        <small style="color: #ccc; display: block; margin-top: 5px;">Se deixado em branco para o ENEM, a arte "0.png" será usada como padrão.</small>
+        <label for="capaJogo">LINK DA IMAGEM DE CAPA (Opcional):</label>
+        <input type="url" id="capaJogo" placeholder="https://exemplo.com/imagem.png">
       </div>
 
       <button type="submit" class="btn btn-add" style="width: 100%; justify-content: center; font-size: 16px; margin-top: 10px;">💾 SALVAR JOGO</button>
@@ -412,14 +413,14 @@
       <h2 style="color: var(--red); margin: 0;">LIXEIRA</h2>
       <button onclick="fecharLixeira()" style="background: transparent; color: white; border: 1px solid white; cursor: pointer; border-radius: 4px;">FECHAR [X]</button>
     </div>
-    <p style="color: #ff9aa2; font-size: 14px; text-align: center;">JOGOS EXCLUÍDOS FICARÃO AQUI POR 30 DIAS.</p>
+    <p style="color: #ff9aa2; font-size: 14px; text-align: center;">JOGOS EXCLUÍDOS PERMANECEM AQUI PARA RESTAURAÇÃO.</p>
     <div id="container-lixeira"></div>
   </div>
 </div>
 
 <script>
-// BASE DE DADOS
-let disciplinas = [
+// BASE DE DADOS PADRÃO
+const disciplinasPadrao = [
   { id: 999, area: "EXAME NACIONAL DO ENSINO MÉDIO", nome: "JOGOS ENEM", icone: "📝", cor: "var(--gold)", jogos: [] },
   { id: 1, area: "LINGUAGENS E SUAS TECNOLOGIAS", nome: "LÍNGUA PORTUGUESA", icone: "💬", cor: "var(--pink-icon)", jogos: [
       { id: 101, nome: "SUPER FL WORLD V3", url: "superflworldv3.html", capa: "", excluido: false }
@@ -438,14 +439,29 @@ let disciplinas = [
   { id: 13, area: "CIÊNCIAS HUMANAS E SOCIAIS APLICADAS", nome: "SOCIOLOGIA", icone: "👥", cor: "var(--orange-icon)", jogos: [] }
 ];
 
+let disciplinas = [];
 let disciplinaAtualId = null;
 let modoDeletarAtivo = false;
+
+// GERENCIAMENTO DE DADOS PERSISTENTES (LOCAL STORAGE)
+function carregarDados() {
+  const dadosSalvos = localStorage.getItem('gamification_data');
+  if (dadosSalvos) {
+    disciplinas = JSON.parse(dadosSalvos);
+  } else {
+    disciplinas = disciplinasPadrao;
+    salvarDados();
+  }
+}
+
+function salvarDados() {
+  localStorage.setItem('gamification_data', JSON.stringify(disciplinas));
+}
 
 // INICIALIZA A TELA PRINCIPAL
 function renderizarTelaPrincipal() {
   const container = document.getElementById('tela-principal');
   
-  // CAPA PRINCIPAL DO APP NO TOPO (SEGUNDO QUADRANTE)
   let htmlContent = `
     <div class="app-cover">
       <div class="cover-overlay">
@@ -480,7 +496,6 @@ function renderizarTelaPrincipal() {
   renderizarLixeira();
 }
 
-// NAVEGAÇÃO
 function abrirDisciplina(id) {
   const disciplina = disciplinas.find(d => d.id === id);
   if(!disciplina) return;
@@ -505,7 +520,6 @@ function voltarTelaPrincipal() {
   document.getElementById('tela-principal').style.display = 'block';
 }
 
-// RENDERIZAR JOGOS COM CAPAS
 function renderizarJogos() {
   const containerJogos = document.getElementById('lista-jogos-container');
   containerJogos.innerHTML = '';
@@ -515,7 +529,7 @@ function renderizarJogos() {
 
   if (jogosAtivos.length === 0) {
     containerJogos.style.display = "block";
-    containerJogos.innerHTML = '<p style="color: gray;">NENHUM JOGO CADASTRADO NESSA DISCIPLINA.</p>';
+    containerJogos.innerHTML = '<p style="color: #bbb;">NENHUM JOGO CADASTRADO NESTA DISCIPLINA.</p>';
     return;
   }
 
@@ -555,10 +569,11 @@ function alternarModoDeletar() {
 
 function confirmarDelecaoJogo(event, jogoId) {
   if (event.target.checked) {
-    if (confirm("Você deseja realmente deletar esse jogo?")) {
+    if (confirm("Você deseja realmente enviar este jogo para a lixeira?")) {
       const disciplina = disciplinas.find(d => d.id === disciplinaAtualId);
       const jogo = disciplina.jogos.find(j => j.id === jogoId);
       jogo.excluido = true;
+      salvarDados();
       renderizarJogos();
       renderizarLixeira();
     } else {
@@ -567,11 +582,9 @@ function confirmarDelecaoJogo(event, jogoId) {
   }
 }
 
-// ADICIONAR JOGOS
 function abrirModalAdicionarJogo() {
   document.getElementById('modalAdicionarJogo').style.display = 'flex';
   document.getElementById('formAdicionarJogo').reset();
-  document.getElementById('tituloModalAdicionar').innerText = "ADICIONAR NOVO JOGO";
   alternarTipoEntradaJogo();
 }
 
@@ -600,39 +613,29 @@ function salvarNovoJogo(event) {
   const nome = document.getElementById('nomeJogo').value.toUpperCase();
   const tipo = document.getElementById('tipoJogo').value;
   
-  let arquivoUrl = "#";
-  if (tipo === 'html_local') {
-    const file = document.getElementById('arquivoHtmlJogo').files[0];
-    if (file) { arquivoUrl = URL.createObjectURL(file); } 
-  } else {
-    arquivoUrl = document.getElementById('linkJogo').value;
-  }
+  let arquivoUrl = tipo === 'html_local' 
+    ? document.getElementById('arquivoHtmlJogo').value 
+    : document.getElementById('linkJogo').value;
 
-  const arquivoCapa = document.getElementById('capaJogo').files[0];
-  let capaUrl = "";
-  if (arquivoCapa) {
-    capaUrl = URL.createObjectURL(arquivoCapa);
-  } else if (disciplinaAtualId === 999) {
+  let capaUrl = document.getElementById('capaJogo').value;
+  if (!capaUrl && disciplinaAtualId === 999) {
     capaUrl = "0.png";
   }
 
   const disciplina = disciplinas.find(d => d.id === disciplinaAtualId);
-  const novoId = Date.now(); 
-  
   disciplina.jogos.push({
-    id: novoId,
+    id: Date.now(),
     nome: nome,
     url: arquivoUrl,
     capa: capaUrl,
     excluido: false
   });
 
+  salvarDados();
   fecharModalAdicionarJogo();
-  abrirDisciplina(disciplinaAtualId);
-  alert("Jogo cadastrado com sucesso!");
+  renderizarJogos();
 }
 
-// LIXEIRA
 function renderizarLixeira() {
   const containerLixeira = document.getElementById('container-lixeira');
   containerLixeira.innerHTML = '';
@@ -645,7 +648,7 @@ function renderizarLixeira() {
   });
   
   if (jogosExcluidos.length === 0) {
-    containerLixeira.innerHTML = '<p style="text-align:center; width:100%;">A LIXEIRA ESTÁ VAZIA.</p>';
+    containerLixeira.innerHTML = '<p style="text-align:center; color:#ccc;">A LIXEIRA ESTÁ VAZIA.</p>';
     return;
   }
 
@@ -654,10 +657,10 @@ function renderizarLixeira() {
     div.style = "display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.1); padding: 10px; border-radius: 6px; margin-bottom: 10px;";
     div.innerHTML = `
       <div>
-        <strong style="color: white; font-size: 16px;">🎮 ${item.jogo.nome}</strong><br>
-        <span style="color: gray; font-size: 12px;">CATEGORIA: ${item.disciplinaNome}</span>
+        <strong style="color: white; font-size: 14px;">🎮 ${item.jogo.nome}</strong><br>
+        <span style="color: #bbb; font-size: 12px;">DISCIPLINA: ${item.disciplinaNome}</span>
       </div>
-      <button class="btn btn-add" onclick="reativarJogo(${item.disciplinaId}, ${item.jogo.id})">REATIVAR</button>
+      <button class="btn btn-add" style="padding: 5px 10px; font-size: 12px;" onclick="reativarJogo(${item.disciplinaId}, ${item.jogo.id})">REATIVAR</button>
     `;
     containerLixeira.appendChild(div);
   });
@@ -668,8 +671,9 @@ function reativarJogo(disciplinaId, jogoId) {
   const jogo = disciplina.jogos.find(j => j.id === jogoId);
   if (jogo) {
     jogo.excluido = false;
+    salvarDados();
     renderizarLixeira();
-    if (disciplinaAtualId === disciplinaId && document.getElementById('tela-disciplina').style.display === 'block') {
+    if (disciplinaAtualId === disciplinaId) {
       renderizarJogos();
     }
   }
@@ -678,8 +682,10 @@ function reativarJogo(disciplinaId, jogoId) {
 function abrirLixeira() { document.getElementById('lixeiraModal').style.display = 'flex'; }
 function fecharLixeira() { document.getElementById('lixeiraModal').style.display = 'none'; }
 
-// INICIA
-window.onload = renderizarTelaPrincipal;
+window.onload = () => {
+  carregarDados();
+  renderizarTelaPrincipal();
+};
 </script>
 </body>
 </html>
