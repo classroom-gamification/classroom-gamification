@@ -4,6 +4,15 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 <title>CLASSROOM GAMIFICATION</title>
+
+<!-- Firebase SDKs (Compat v10) -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
+
+<!-- Carrega suas configurações do Firebase contidas no repositório -->
+<script src="firebase-config.js"></script>
+
 <style>
   :root {
     --bg-color: #0d2444;
@@ -23,7 +32,7 @@
   body {
     margin: 0;
     font-family: 'Trebuchet MS', 'Segoe UI', Verdana, sans-serif;
-    /* PLANO DE FUNDO GERAL COMPATÍVEL COM TODOS OS DISPOSITIVOS */
+    /* PLANO DE FUNDO GERAL */
     background: url('image_483032.jpg') no-repeat center center fixed;
     background-size: cover;
     color: var(--text-color);
@@ -105,7 +114,7 @@
     text-shadow: 1px 1px 3px #000;
   }
 
-  /* ESTILOS DA TELA PRINCIPAL (ÁREAS E ÍCONES) */
+  /* SEÇÕES E ÍCONES */
   .area-section {
     margin-bottom: 30px;
     background: rgba(10, 20, 40, 0.75);
@@ -327,6 +336,19 @@
     color: #000;
   }
 
+  /* STATUS DE UPLOAD */
+  #statusUpload {
+    display: none;
+    margin-top: 10px;
+    padding: 10px;
+    background: rgba(42, 157, 63, 0.3);
+    border: 1px solid var(--green);
+    border-radius: 6px;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+  }
+
   @media (max-width: 600px) {
     header h1 { font-size: 18px; }
     .grid-icones { justify-content: center; }
@@ -354,7 +376,7 @@
   </div>
 
   <div class="acoes-disciplina">
-    <button class="btn btn-add" onclick="abrirModalAdicionarJogo()">➕ ADICIONAR JOGO</button>
+    <button class="btn btn-add" onclick="abrirModalAdicionarJogo()">➕ ADICIONAR JOGO (NUEVM / LOCAL)</button>
     <button class="btn btn-del" id="btn-deletar-jogo" onclick="alternarModoDeletar()">🗑 DELETAR JOGO</button>
   </div>
 
@@ -368,40 +390,46 @@
 <div id="modalAdicionarJogo" class="modal-overlay">
   <div class="modal-content">
     <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #fff; padding-bottom: 10px; margin-bottom: 20px;">
-      <h2 style="color: var(--green); margin: 0;" id="tituloModalAdicionar">ADICIONAR NOVO JOGO</h2>
+      <h2 style="color: var(--green); margin: 0;" id="tituloModalAdicionar">ADICIONAR JOGO À PLATAFORMA</h2>
       <button onclick="fecharModalAdicionarJogo()" style="background: transparent; color: white; border: 1px solid white; cursor: pointer; border-radius: 4px;">FECHAR [X]</button>
     </div>
     
     <form id="formAdicionarJogo" onsubmit="salvarNovoJogo(event)">
       <div class="form-group">
         <label for="nomeJogo">NOME DO JOGO:</label>
-        <input type="text" id="nomeJogo" required placeholder="Ex: Simulado de Redação">
+        <input type="text" id="nomeJogo" required placeholder="Ex: Quiz de História">
       </div>
 
       <div class="form-group">
-        <label for="tipoJogo">TIPO DO JOGO:</label>
+        <label for="tipoJogo">ORIGEM DO JOGO:</label>
         <select id="tipoJogo" onchange="alternarTipoEntradaJogo()" required>
-          <option value="link_web">Link da Web (URL)</option>
-          <option value="html_local">Arquivo Local (.html)</option>
+          <option value="upload_html">Enviar Arquivo HTML do Computador (Salva na Nuvem)</option>
+          <option value="link_web">Link da Web (URL Externa)</option>
         </select>
       </div>
 
-      <div class="form-group" id="grupoLinkWeb">
+      <!-- ENVIAR ARQUIVO HTML DA MÁQUINA -->
+      <div class="form-group" id="grupoArquivoHtml">
+        <label for="arquivoHtmlJogo">SELECIONE O ARQUIVO DO JOGO (.html, .htm):</label>
+        <input type="file" id="arquivoHtmlJogo" accept=".html,.htm">
+      </div>
+
+      <!-- LINK EXTERNO -->
+      <div class="form-group" id="grupoLinkWeb" style="display: none;">
         <label for="linkJogo">LINK / URL DO JOGO:</label>
         <input type="url" id="linkJogo" placeholder="https://...">
       </div>
 
-      <div class="form-group" id="grupoArquivoHtml" style="display: none;">
-        <label for="arquivoHtmlJogo">NOME DO ARQUIVO LOCAL (Ex: jogo1.html):</label>
-        <input type="text" id="arquivoHtmlJogo" placeholder="nome_do_jogo.html">
-      </div>
-
+      <!-- ENVIAR CAPA PNG / JPEG -->
       <div class="form-group">
-        <label for="capaJogo">LINK DA IMAGEM DE CAPA (Opcional):</label>
-        <input type="url" id="capaJogo" placeholder="https://exemplo.com/imagem.png">
+        <label for="capaJogoFile">IMAGEM DE CAPA DO JOGO (.PNG, .JPEG, .JPG):</label>
+        <input type="file" id="capaJogoFile" accept="image/png, image/jpeg, image/jpg">
+        <small style="color: #ccc; display: block; margin-top: 5px;">A imagem será armazenada permanentemente na plataforma.</small>
       </div>
 
-      <button type="submit" class="btn btn-add" style="width: 100%; justify-content: center; font-size: 16px; margin-top: 10px;">💾 SALVAR JOGO</button>
+      <div id="statusUpload">⏳ Enviando arquivos e salvando na plataforma... Aguarde!</div>
+
+      <button type="submit" id="btnSalvarJogo" class="btn btn-add" style="width: 100%; justify-content: center; font-size: 16px; margin-top: 15px;">💾 SALVAR NA PLATAFORMA</button>
     </form>
   </div>
 </div>
@@ -419,6 +447,23 @@
 </div>
 
 <script>
+// INICIALIZAÇÃO DO FIREBASE (SE CONFIGURADO EM firebase-config.js)
+let db = null;
+let storage = null;
+
+try {
+  if (typeof firebase !== 'undefined' && window.firebaseConfig) {
+    if (!firebase.apps.length) {
+      firebase.initializeApp(window.firebaseConfig);
+    }
+    db = firebase.firestore();
+    storage = firebase.storage();
+    console.log("Firebase Conectado com Sucesso!");
+  }
+} catch (e) {
+  console.warn("Firebase não inicializado. Rodando em modo de armazenamento local.", e);
+}
+
 // BASE DE DADOS PADRÃO
 const disciplinasPadrao = [
   { id: 999, area: "EXAME NACIONAL DO ENSINO MÉDIO", nome: "JOGOS ENEM", icone: "📝", cor: "var(--gold)", jogos: [] },
@@ -443,8 +488,28 @@ let disciplinas = [];
 let disciplinaAtualId = null;
 let modoDeletarAtivo = false;
 
-// GERENCIAMENTO DE DADOS PERSISTENTES (LOCAL STORAGE)
-function carregarDados() {
+// CARREGAR DADOS DA NUVEM / LOCAL
+async function carregarDados() {
+  if (db) {
+    try {
+      const snapshot = await db.collection('gamification').doc('dados').get();
+      if (snapshot.exists) {
+        disciplinas = snapshot.data().disciplinas;
+      } else {
+        disciplinas = disciplinasPadrao;
+        await salvarDados();
+      }
+    } catch (err) {
+      console.error("Erro ao buscar dados do Firebase:", err);
+      carregarLocalStorage();
+    }
+  } else {
+    carregarLocalStorage();
+  }
+  renderizarTelaPrincipal();
+}
+
+function carregarLocalStorage() {
   const dadosSalvos = localStorage.getItem('gamification_data');
   if (dadosSalvos) {
     disciplinas = JSON.parse(dadosSalvos);
@@ -454,11 +519,18 @@ function carregarDados() {
   }
 }
 
-function salvarDados() {
+async function salvarDados() {
   localStorage.setItem('gamification_data', JSON.stringify(disciplinas));
+  if (db) {
+    try {
+      await db.collection('gamification').doc('dados').set({ disciplinas: disciplinas });
+    } catch (e) {
+      console.error("Erro ao sincronizar com Firebase:", e);
+    }
+  }
 }
 
-// INICIALIZA A TELA PRINCIPAL
+// RENDERIZAÇÃO DA INTERFACE
 function renderizarTelaPrincipal() {
   const container = document.getElementById('tela-principal');
   
@@ -567,13 +639,13 @@ function alternarModoDeletar() {
   renderizarJogos();
 }
 
-function confirmarDelecaoJogo(event, jogoId) {
+async function confirmarDelecaoJogo(event, jogoId) {
   if (event.target.checked) {
-    if (confirm("Você deseja realmente enviar este jogo para a lixeira?")) {
+    if (confirm("Deseja realmente enviar este jogo para a lixeira?")) {
       const disciplina = disciplinas.find(d => d.id === disciplinaAtualId);
       const jogo = disciplina.jogos.find(j => j.id === jogoId);
       jogo.excluido = true;
-      salvarDados();
+      await salvarDados();
       renderizarJogos();
       renderizarLixeira();
     } else {
@@ -582,9 +654,12 @@ function confirmarDelecaoJogo(event, jogoId) {
   }
 }
 
+// MODAIS E UPLOAD DE ARQUIVOS PARA A NUVEM
 function abrirModalAdicionarJogo() {
   document.getElementById('modalAdicionarJogo').style.display = 'flex';
   document.getElementById('formAdicionarJogo').reset();
+  document.getElementById('statusUpload').style.display = 'none';
+  document.getElementById('btnSalvarJogo').disabled = false;
   alternarTipoEntradaJogo();
 }
 
@@ -594,7 +669,7 @@ function fecharModalAdicionarJogo() {
 
 function alternarTipoEntradaJogo() {
   const tipo = document.getElementById('tipoJogo').value;
-  if (tipo === 'html_local') {
+  if (tipo === 'upload_html') {
     document.getElementById('grupoArquivoHtml').style.display = 'block';
     document.getElementById('arquivoHtmlJogo').required = true;
     document.getElementById('grupoLinkWeb').style.display = 'none';
@@ -607,33 +682,88 @@ function alternarTipoEntradaJogo() {
   }
 }
 
-function salvarNovoJogo(event) {
+// FUNÇÃO PRINCIPAL DE SALVAMENTO COM UPLOAD
+async function salvarNovoJogo(event) {
   event.preventDefault();
+
+  const statusEl = document.getElementById('statusUpload');
+  const btnSalvar = document.getElementById('btnSalvarJogo');
+  
+  statusEl.style.display = 'block';
+  btnSalvar.disabled = true;
 
   const nome = document.getElementById('nomeJogo').value.toUpperCase();
   const tipo = document.getElementById('tipoJogo').value;
-  
-  let arquivoUrl = tipo === 'html_local' 
-    ? document.getElementById('arquivoHtmlJogo').value 
-    : document.getElementById('linkJogo').value;
+  const arquivoHtml = document.getElementById('arquivoHtmlJogo').files[0];
+  const arquivoCapa = document.getElementById('capaJogoFile').files[0];
 
-  let capaUrl = document.getElementById('capaJogo').value;
-  if (!capaUrl && disciplinaAtualId === 999) {
-    capaUrl = "0.png";
+  let urlJogoFinal = "";
+  let urlCapaFinal = "";
+
+  try {
+    // 1. PROCESSAR ARQUIVO HTML DO JOGO
+    if (tipo === 'upload_html' && arquivoHtml) {
+      if (storage) {
+        statusEl.innerText = "⏳ Enviando jogo (.html) para o Firebase Storage...";
+        const fileRef = storage.ref(`jogos/${Date.now()}_${arquivoHtml.name}`);
+        await fileRef.put(arquivoHtml);
+        urlJogoFinal = await fileRef.getDownloadURL();
+      } else {
+        // Fallback: Lê o HTML e converte em Data URL para abrir localmente
+        urlJogoFinal = await converterParaDataURL(arquivoHtml);
+      }
+    } else {
+      urlJogoFinal = document.getElementById('linkJogo').value;
+    }
+
+    // 2. PROCESSAR CAPA (.PNG, .JPEG, .JPG)
+    if (arquivoCapa) {
+      if (storage) {
+        statusEl.innerText = "⏳ Enviando capa da imagem para a nuvem...";
+        const capaRef = storage.ref(`capas/${Date.now()}_${arquivoCapa.name}`);
+        await capaRef.put(arquivoCapa);
+        urlCapaFinal = await capaRef.getDownloadURL();
+      } else {
+        urlCapaFinal = await converterParaDataURL(arquivoCapa);
+      }
+    } else if (disciplinaAtualId === 999) {
+      urlCapaFinal = "0.png";
+    }
+
+    // 3. REGISTRAR NO BANCO DE DADOS
+    const disciplina = disciplinas.find(d => d.id === disciplinaAtualId);
+    disciplina.jogos.push({
+      id: Date.now(),
+      nome: nome,
+      url: urlJogoFinal,
+      capa: urlCapaFinal,
+      excluido: false
+    });
+
+    statusEl.innerText = "⚡ Salvando dados na plataforma...";
+    await salvarDados();
+
+    fecharModalAdicionarJogo();
+    renderizarJogos();
+    alert("Jogo e capa armazenados com sucesso na plataforma!");
+
+  } catch (erro) {
+    console.error(erro);
+    alert("Erro ao realizar o upload. Verifique as configurações do Firebase ou sua conexão.");
+  } finally {
+    statusEl.style.display = 'none';
+    btnSalvar.disabled = false;
   }
+}
 
-  const disciplina = disciplinas.find(d => d.id === disciplinaAtualId);
-  disciplina.jogos.push({
-    id: Date.now(),
-    nome: nome,
-    url: arquivoUrl,
-    capa: capaUrl,
-    excluido: false
+// AUXILIAR PARA LER ARQUIVOS LOCALMENTE (CASO SEM FIREBASE)
+function converterParaDataURL(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+    reader.readAsDataURL(file);
   });
-
-  salvarDados();
-  fecharModalAdicionarJogo();
-  renderizarJogos();
 }
 
 function renderizarLixeira() {
@@ -666,12 +796,12 @@ function renderizarLixeira() {
   });
 }
 
-function reativarJogo(disciplinaId, jogoId) {
+async function reativarJogo(disciplinaId, jogoId) {
   const disciplina = disciplinas.find(d => d.id === disciplinaId);
   const jogo = disciplina.jogos.find(j => j.id === jogoId);
   if (jogo) {
     jogo.excluido = false;
-    salvarDados();
+    await salvarDados();
     renderizarLixeira();
     if (disciplinaAtualId === disciplinaId) {
       renderizarJogos();
@@ -684,7 +814,6 @@ function fecharLixeira() { document.getElementById('lixeiraModal').style.display
 
 window.onload = () => {
   carregarDados();
-  renderizarTelaPrincipal();
 };
 </script>
 </body>
