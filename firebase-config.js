@@ -1,5 +1,4 @@
 window.firebaseConfig = {
-  apiKey: "SuaApiKeyAqui...",
   authDomain: "sistema-jogos-educacionais.firebaseapp.com",
   projectId: "sistema-jogos-educacionais",
   storageBucket: "sistema-jogos-educacionais.appspot.com",
